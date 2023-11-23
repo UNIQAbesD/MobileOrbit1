@@ -23,7 +23,7 @@ public class HormingMover : MonoBehaviour
     {
         if (TargetObject) 
         {
-            float maxRotDelta_thisFrame=MaxAngularV * Time.fixedDeltaTime,;
+            float maxRotDelta_thisFrame=MaxAngularV * Time.fixedDeltaTime;
             this.transform.rotation =Quaternion.AngleAxis(Mathf.Clamp(0,-maxRotDelta_thisFrame, maxRotDelta_thisFrame),Vector3.up)*this.transform.rotation;
         }
 
