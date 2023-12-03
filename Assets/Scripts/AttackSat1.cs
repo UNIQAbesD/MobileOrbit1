@@ -7,18 +7,30 @@ public class AttackSat1 : MonoBehaviour
 
     public Test1Mover ParentMover;
     public bool IsRight;
+    public bool isParring;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (isParring & !animator.GetCurrentAnimatorStateInfo(0).IsName("Rolling"))
+        {
+            //Debug.Log("âÒÇÍÅ`");
+            animator.Play("Rolling", 0);
+        }
+        else if (!isParring & !animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) 
+        {
+            //Debug.Log("Ç∆Ç‹ÇÍÅ`");
+            animator.Play("Idle", 0);
+        }
     }
+
+
 
     private void OnTriggerStay(Collider other)
     {

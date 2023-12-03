@@ -20,10 +20,23 @@ public class Test1Mover : MonoBehaviour
     public GameObject CenterSat;
     public GameObject LeftSat;
     public GameObject RightSat;
+    public AttackSat1 LeftDrill;
+    public AttackSat1 RightDrill;
     public GameObject GuardSat;
     public GameObject PlayerCameraObj;
 
     public LineRenderer lineRenderer;
+
+    public GameObject LazerBeamObject;
+    public float LazerBeamSize;
+
+
+    float ParringTimer = 0;
+    bool CantStartParring_R=false;
+    bool CantStartParring_L = false;
+    float CT_LazerBeam=0;
+
+
 
 
     // Start is called before the first frame update
@@ -41,10 +54,31 @@ public class Test1Mover : MonoBehaviour
         if (Input.GetKey(KeyCode.A)&!LeftMoveStop)
         {
             CurTheta += AngularV * Time.deltaTime;
+
+            if ((RightDrill.isParring | (!LeftDrill.isParring & !RightDrill.isParring))& !CantStartParring_L) 
+            {
+                CantStartParring_L = true;
+                CantStartParring_R = false;
+
+
+                ParringTimer = 0.3f;
+                LeftDrill.isParring = true;
+                RightDrill.isParring = false;
+            }
+            
         }
         if (Input.GetKey(KeyCode.D)&!RightMoveStop)
         {
             CurTheta -= AngularV * Time.deltaTime;
+            if ((LeftDrill.isParring | (!LeftDrill.isParring & !RightDrill.isParring)) & !CantStartParring_R)
+            {
+                CantStartParring_L = false;
+                CantStartParring_R = true;
+
+                ParringTimer = 0.3f;
+                LeftDrill.isParring = false;
+                RightDrill.isParring = true;
+            }
         }
 
     }
@@ -52,6 +86,23 @@ public class Test1Mover : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
+        if (ParringTimer <= 0)
+        {
+            ParringTimer = 0;
+            LeftDrill.isParring = false;
+            RightDrill.isParring = false;
+        }
+        else
+        {
+            ParringTimer -= Time.fixedDeltaTime;
+        }
+
+        if (CT_LazerBeam > 0) 
+        {
+            CT_LazerBeam -= Time.fixedDeltaTime;
+        }
+
 
         GuardSat.SetActive(IsGuard);
         Quaternion cameraLocalRot = Quaternion.Euler(XRot_xyOrder, YRot_xyOrder, 0);
@@ -68,6 +119,8 @@ public class Test1Mover : MonoBehaviour
         //åıê¸ÇèoÇ∑
         if (Input.GetMouseButton(0))
         {
+            Vector3 shotTo = this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100;
+
             lineRenderer.enabled = true;
             lineRenderer.SetPosition(0, this.transform.position);
             lineRenderer.SetPosition(1, this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100);
@@ -75,12 +128,21 @@ public class Test1Mover : MonoBehaviour
             RaycastHit hit;
             if (Physics.SphereCast(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 4, PlayerCameraObj.transform.rotation * Vector3.forward, out hit))
             {
-                lineRenderer.SetPosition(1, hit.point);
+              
                 if (hit.collider.gameObject.CompareTag("HitObject"))
                 {
+                    shotTo = hit.point;
+                    lineRenderer.SetPosition(1, hit.point);
                     HitObject hitobjsHitObject = hit.collider.gameObject.GetComponent<HitObject>();
                     hitobjsHitObject.OnDamaged(new HitData(10));
                 }
+                
+            }
+            if (CT_LazerBeam <= 0)
+            {
+                CT_LazerBeam = 0.1f;
+                Vector3 shotFrom = this.transform.position + PlayerCameraObj.transform.rotation * (Vector3.forward * (1 + LazerBeamSize / 2));
+                //Instantiate(LazerBeamObject, shotFrom, V3_MyUtil.RotateV2V(Vector3.forward,shotTo- shotFrom));
             }
         }
         else 
