@@ -125,14 +125,17 @@ public class Test1Mover : MonoBehaviour
             lineRenderer.SetPosition(0, this.transform.position);
             lineRenderer.SetPosition(1, this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100);
 
+            
             RaycastHit hit;
             if (Physics.SphereCast(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 4, PlayerCameraObj.transform.rotation * Vector3.forward, out hit))
             {
-              
+                lineRenderer.SetPosition(1, hit.point);
+                shotTo = hit.point;
+                
                 if (hit.collider.gameObject.CompareTag("HitObject"))
                 {
-                    shotTo = hit.point;
-                    lineRenderer.SetPosition(1, hit.point);
+                   
+                    
                     HitObject hitobjsHitObject = hit.collider.gameObject.GetComponent<HitObject>();
                     hitobjsHitObject.OnDamaged(new HitData(10));
                 }
@@ -142,7 +145,7 @@ public class Test1Mover : MonoBehaviour
             {
                 CT_LazerBeam = 0.1f;
                 Vector3 shotFrom = this.transform.position + PlayerCameraObj.transform.rotation * (Vector3.forward * (1 + LazerBeamSize / 2));
-                //Instantiate(LazerBeamObject, shotFrom, V3_MyUtil.RotateV2V(Vector3.forward,shotTo- shotFrom));
+                Instantiate(LazerBeamObject, shotFrom, V3_MyUtil.RotateV2V(Vector3.forward,shotTo- shotFrom));
             }
         }
         else 
