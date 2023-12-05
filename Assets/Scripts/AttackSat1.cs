@@ -10,6 +10,7 @@ public class AttackSat1 : MonoBehaviour
     public bool isParring;
     public Animator animator;
 
+    public HPComponent hpComponent;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,4 +55,19 @@ public class AttackSat1 : MonoBehaviour
             ParentMover.LeftMoveStop = true;
         }
     }
+
+    public void OnDamage(HitData hitData)
+    {
+        if (isParring)
+        {
+            Debug.Log("ƒpƒŠƒB‚µ‚Ü‚µ‚½");
+            ParentMover.ExtendParringTimer();
+        }
+        else
+        {
+            hpComponent.OnDamaged(hitData);
+        }
+    }
 }
+
+

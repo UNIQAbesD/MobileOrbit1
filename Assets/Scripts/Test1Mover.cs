@@ -125,7 +125,31 @@ public class Test1Mover : MonoBehaviour
             lineRenderer.SetPosition(0, this.transform.position);
             lineRenderer.SetPosition(1, this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100);
 
-            
+            RaycastHit[] hits= Physics.SphereCastAll(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 3, PlayerCameraObj.transform.rotation * Vector3.forward);
+
+            foreach (RaycastHit aHit in hits) 
+            {
+                
+
+                if (aHit.collider.gameObject.CompareTag("HitObject"))
+                {
+                    
+                    lineRenderer.SetPosition(1, aHit.point);
+                    shotTo = aHit.point;
+
+                    HitObject hitobjsHitObject = aHit.collider.gameObject.GetComponent<HitObject>();
+                    hitobjsHitObject.OnDamaged(new HitData(10));
+                    break;
+                }
+                else if (!aHit.collider.gameObject.CompareTag("UnReactReticle"))
+                {
+                    //Debug.Log(aHit.collider.gameObject.name);
+                    lineRenderer.SetPosition(1, aHit.point);
+                    shotTo = aHit.point;
+                    break;
+                }
+            }
+            /*
             RaycastHit hit;
             if (Physics.SphereCast(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 4, PlayerCameraObj.transform.rotation * Vector3.forward, out hit))
             {
@@ -141,6 +165,10 @@ public class Test1Mover : MonoBehaviour
                 }
                 
             }
+            */
+            
+
+
             if (CT_LazerBeam <= 0)
             {
                 CT_LazerBeam = 0.1f;
@@ -155,5 +183,18 @@ public class Test1Mover : MonoBehaviour
         
     }
 
+
+    public void OnDeath(HPComponent hpComponent) 
+    {
+        Debug.Log("‚µ‚ñ‚¾`");
+    }
+
+    public void ExtendParringTimer() 
+    {
+        if (LeftDrill.isParring|RightDrill.isParring) 
+        {
+            ParringTimer = 0.3f;
+        }
+    }
     
 }

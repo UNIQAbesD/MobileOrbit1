@@ -18,8 +18,9 @@ public class HitObject : MonoBehaviour
 
     public virtual void OnDamaged(HitData hitData) 
     {
-        Debug.Log($"{hitData.damagePoint}ダメージを受けた！");
+        Debug.Log($"{this.gameObject.name}は{hitData.damagePoint}ダメージを受けた！");
     }
+
 }
 
 public class HitData 
