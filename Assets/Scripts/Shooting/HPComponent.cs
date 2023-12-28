@@ -12,7 +12,7 @@ public class HPComponent : MonoBehaviour
         InvokedOnDeathEvent = false;
     }
 
-    public void OnDamaged(HitData hitData) 
+    public virtual void OnDamaged(HitData hitData) 
     {
         HP -= hitData.damagePoint;
         if (HP <= 0& !InvokedOnDeathEvent) 
