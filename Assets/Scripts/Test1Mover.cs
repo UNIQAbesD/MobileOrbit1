@@ -132,7 +132,8 @@ public class Test1Mover : MonoBehaviour
             lineRenderer.SetPosition(0, this.transform.position);
             lineRenderer.SetPosition(1, this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100);
 
-            RaycastHit[] hits= Physics.SphereCastAll(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 16, 3, PlayerCameraObj.transform.rotation * Vector3.forward);
+            float CToPDist=(PlayerCameraObj.transform.position-this.transform.position).magnitude;
+            RaycastHit[] hits= Physics.SphereCastAll(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * (CToPDist+1), 3, PlayerCameraObj.transform.rotation * Vector3.forward);
 
             foreach (RaycastHit aHit in hits) 
             {
@@ -143,14 +144,10 @@ public class Test1Mover : MonoBehaviour
                     
                     lineRenderer.SetPosition(1, aHit.point);
                     shotTo = aHit.point;
-
-                    HitObject hitobjsHitObject = aHit.collider.gameObject.GetComponent<HitObject>();
-                    hitobjsHitObject.OnDamaged(new HitData(10));
                     break;
                 }
                 else if (!aHit.collider.gameObject.CompareTag("UnReactReticle"))
                 {
-                    //Debug.Log(aHit.collider.gameObject.name);
                     lineRenderer.SetPosition(1, aHit.point);
                     shotTo = aHit.point;
                     break;
