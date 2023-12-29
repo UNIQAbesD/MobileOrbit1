@@ -9,6 +9,8 @@ public class SimpleShooter : MonoBehaviour
     public float ShootCT = 2;
     public float ShootingTime = 1;
     public int BulletNum = 10;
+
+    public Vector3 SpawnOffset=new Vector3(0,0,3);
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,7 @@ public class SimpleShooter : MonoBehaviour
             int wait_miliSec = (int)(ShootingTime / BulletNum * 1000);
             for (int i = 0; i < BulletNum; i++)
             {
-                Instantiate(BulletObject.gameObject, this.transform.position + Vector3.forward* 3, this.transform.rotation);
+                Instantiate(BulletObject.gameObject, this.transform.position + SpawnOffset, this.transform.rotation);
                 await UniTask.Delay(wait_miliSec, false, PlayerLoopTiming.FixedUpdate, this.gameObject.GetCancellationTokenOnDestroy());
             }
         }

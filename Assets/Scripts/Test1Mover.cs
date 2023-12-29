@@ -24,13 +24,16 @@ public class Test1Mover : MonoBehaviour
     public AttackSat1 RightDrill;
     public GameObject GuardSat;
     public GameObject PlayerCameraObj;
+    public HPComponent hpComp;
 
     public LineRenderer lineRenderer;
 
     public GameObject LazerBeamObject;
+    public GameObject SealdObject;
+
     public float LazerBeamSize;
 
-
+    float InvicibilityTimer = 0;
     float ParringTimer = 0;
     bool CantStartParring_R=false;
     bool CantStartParring_L = false;
@@ -103,6 +106,10 @@ public class Test1Mover : MonoBehaviour
             CT_LazerBeam -= Time.fixedDeltaTime;
         }
 
+        if (InvicibilityTimer > 0) 
+        {
+            InvicibilityTimer -= Time.fixedDeltaTime;
+        }
 
         GuardSat.SetActive(IsGuard);
         Quaternion cameraLocalRot = Quaternion.Euler(XRot_xyOrder, YRot_xyOrder, 0);
@@ -125,7 +132,7 @@ public class Test1Mover : MonoBehaviour
             lineRenderer.SetPosition(0, this.transform.position);
             lineRenderer.SetPosition(1, this.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 100);
 
-            RaycastHit[] hits= Physics.SphereCastAll(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 3, PlayerCameraObj.transform.rotation * Vector3.forward);
+            RaycastHit[] hits= Physics.SphereCastAll(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 16, 3, PlayerCameraObj.transform.rotation * Vector3.forward);
 
             foreach (RaycastHit aHit in hits) 
             {
@@ -149,24 +156,9 @@ public class Test1Mover : MonoBehaviour
                     break;
                 }
             }
-            /*
-            RaycastHit hit;
-            if (Physics.SphereCast(PlayerCameraObj.transform.position + PlayerCameraObj.transform.rotation * Vector3.forward * 9, 4, PlayerCameraObj.transform.rotation * Vector3.forward, out hit))
-            {
-                lineRenderer.SetPosition(1, hit.point);
-                shotTo = hit.point;
-                
-                if (hit.collider.gameObject.CompareTag("HitObject"))
-                {
-                   
-                    
-                    HitObject hitobjsHitObject = hit.collider.gameObject.GetComponent<HitObject>();
-                    hitobjsHitObject.OnDamaged(new HitData(10));
-                }
-                
-            }
-            */
-            
+
+
+            //RTransform_MyUtil.WorldToCanvasWorld();
 
 
             if (CT_LazerBeam <= 0)
@@ -194,6 +186,15 @@ public class Test1Mover : MonoBehaviour
         if (LeftDrill.isParring|RightDrill.isParring) 
         {
             ParringTimer = 0.3f;
+        }
+    }
+
+    public void OnDamaged(HitData hitData) 
+    {
+        if (InvicibilityTimer<=0) 
+        {
+            hpComp.OnDamaged(hitData);
+            InvicibilityTimer = 0.2f;
         }
     }
     

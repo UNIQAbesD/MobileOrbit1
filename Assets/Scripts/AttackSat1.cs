@@ -65,7 +65,7 @@ public class AttackSat1 : MonoBehaviour
         }
         else
         {
-            hpComponent.OnDamaged(hitData);
+            ParentMover.OnDamaged(hitData);
         }
     }
 }

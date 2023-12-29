@@ -29,4 +29,18 @@ public static class RTransform_MyUtil
         
         return camera.ScreenToWorldPoint(new Vector3(screenPos.x,screenPos.y, cameraDist));
     }
+
+    public static Vector3 WorldToCanvasWorld(Vector3 worldPos,Canvas canvas,RectTransform canvasRect,Camera camera) 
+    {
+        Vector3 RetPos;
+        Camera tempCam = null;
+
+        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            tempCam = camera;
+        }
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRect, camera.WorldToScreenPoint(worldPos), tempCam, out RetPos);
+
+        return RetPos;
+    }
 }
