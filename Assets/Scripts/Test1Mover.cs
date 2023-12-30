@@ -31,6 +31,10 @@ public class Test1Mover : MonoBehaviour
     public GameObject LazerBeamObject;
     public GameObject SealdObject;
 
+    public AudioSource audioSource;
+    public AudioClip audioClip;
+
+
     public float LazerBeamSize;
 
     float InvicibilityTimer = 0;
@@ -54,11 +58,11 @@ public class Test1Mover : MonoBehaviour
 
         YRot_xyOrder = Mathf.Clamp(YRot_xyOrder + Input.GetAxis("Mouse X"), -90, 90);
         XRot_xyOrder = Mathf.Clamp(XRot_xyOrder - Input.GetAxis("Mouse Y")*1.5f, -45, 45);
-        if (Input.GetKey(KeyCode.A)&!LeftMoveStop)
+        if (Input.GetKey(KeyCode.A) & !LeftMoveStop)//左に移動+左パリィ
         {
             CurTheta += AngularV * Time.deltaTime;
 
-            if ((RightDrill.isParring | (!LeftDrill.isParring & !RightDrill.isParring))& !CantStartParring_L) 
+            if ((RightDrill.isParring | (!LeftDrill.isParring & !RightDrill.isParring)) & !CantStartParring_L)
             {
                 CantStartParring_L = true;
                 CantStartParring_R = false;
@@ -68,9 +72,9 @@ public class Test1Mover : MonoBehaviour
                 LeftDrill.isParring = true;
                 RightDrill.isParring = false;
             }
-            
+
         }
-        if (Input.GetKey(KeyCode.D)&!RightMoveStop)
+        else if (Input.GetKey(KeyCode.D) & !RightMoveStop)//右に移動+右パリィ
         {
             CurTheta -= AngularV * Time.deltaTime;
             if ((LeftDrill.isParring | (!LeftDrill.isParring & !RightDrill.isParring)) & !CantStartParring_R)
@@ -82,6 +86,15 @@ public class Test1Mover : MonoBehaviour
                 LeftDrill.isParring = false;
                 RightDrill.isParring = true;
             }
+        }
+        else 
+        {
+            CantStartParring_L = false;
+            CantStartParring_R = false;
+
+            ParringTimer = 0.3f;
+            LeftDrill.isParring = false;
+            RightDrill.isParring = false;
         }
 
     }
@@ -163,6 +176,7 @@ public class Test1Mover : MonoBehaviour
                 CT_LazerBeam = 0.1f;
                 Vector3 shotFrom = this.transform.position + PlayerCameraObj.transform.rotation * (Vector3.forward * (1 + LazerBeamSize / 2));
                 Instantiate(LazerBeamObject, shotFrom, V3_MyUtil.RotateV2V(Vector3.forward,shotTo- shotFrom));
+                //audioSource.PlayOneShot(audioClip);
             }
         }
         else 
@@ -190,6 +204,7 @@ public class Test1Mover : MonoBehaviour
     {
         if (InvicibilityTimer<=0) 
         {
+            audioSource.PlayOneShot(audioClip);
             hpComp.OnDamaged(hitData);
             InvicibilityTimer = 0.2f;
         }

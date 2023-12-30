@@ -11,6 +11,9 @@ public class AttackSat1 : MonoBehaviour
     public Animator animator;
 
     public HPComponent hpComponent;
+
+    public AudioSource audioSource;
+    public AudioClip ParryClip;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +63,7 @@ public class AttackSat1 : MonoBehaviour
     {
         if (isParring)
         {
+            audioSource.PlayOneShot(ParryClip);
             Debug.Log("ƒpƒŠƒB‚µ‚Ü‚µ‚½");
             ParentMover.ExtendParringTimer();
         }

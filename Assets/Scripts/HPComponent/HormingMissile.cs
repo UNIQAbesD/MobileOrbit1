@@ -27,18 +27,14 @@ public class HormingMissile : MonoBehaviour
     }
 
 
-    public void OnDamaged(HitData hitData) 
+ 
+
+    public void OnDeath(HPComponent hpComp) 
     {
-        //Debug.Log($"{hitData.damagePoint}É_ÉÅÇ‡ÇÁÇ¡ÇΩÅ`");
-        HP -= hitData.damagePoint;
-        if (HP<=0& !isHPZeroEventInvoked) 
-        {
-            isHPZeroEventInvoked = true;
-            Debug.Log("Ç§ÇøÇ©Ç¶ÇµÇΩÅI");
-            this.transform.rotation =this.transform.rotation*Quaternion.Euler(0,180,0);
-            mover.TargetObject = HitBackTarget;
-            mover.LifeTime = 4;
-            friendlyHitter.FriendryLayer = 0;
-        }
+        Debug.Log("Ç§ÇøÇ©Ç¶ÇµÇΩÅI");
+        this.transform.rotation = this.transform.rotation * Quaternion.Euler(0, 180, 0);
+        mover.TargetObject = HitBackTarget;
+        mover.LifeTime = 4;
+        friendlyHitter.FriendryLayer = 0;
     }
 }
